@@ -2,7 +2,7 @@
 //Developed by Srinivas Anil Kumar Varanasi
 //This script should be run as admin user in global scope
 //Script gives output as table name and sysId
-//Find table based on sys_id
+//Find table based on sys_id.
 runQueryonTables();
 
 function runQueryonTables() {
