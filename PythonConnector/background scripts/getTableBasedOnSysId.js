@@ -2,9 +2,11 @@
 //Developed by Srinivas Anil Kumar Varanasi
 //This script should be run as admin user in global scope
 //Script gives output as table name and sysId
+//Find table based on sys_id
 runQueryonTables();
+
 function runQueryonTables() {
-	var sLog = '';
+    var sLog = '';
     var outputJson = {};
     var tableList = [];
     var outputList = [];
@@ -13,17 +15,18 @@ function runQueryonTables() {
     var grTable = new GlideRecord('sys_db_object');
     grTable.query();
     while (grTable.next()) {
-          tableList.push(grTable.name + '');
+        tableList.push(grTable.name + '');
     }
     for (var m = 0; m < tableList.length; m++) {
         outputJson = runQuery(tableList[m], sysId);
         outputList.push(outputJson);
     }
     for (var k = 0; k < outputList.length; k++) {
-		sLog += outputList[k].tableName + "=" + outputList[k].output + "\n";
-        //gs.print(outputList[k].tableName + "=" + outputList[k].output);
+		if(outputList[k].output.length >0) {
+        sLog += outputList[k].tableName + "=" + outputList[k].output + "\n";
+			}
     }
-	gs.print(sLog);
+    gs.print("Tables matching sys_id =" + sLog);
 }
 
 function runQuery(tableName, sysId) {
@@ -31,11 +34,11 @@ function runQuery(tableName, sysId) {
     var outputJson = {};
     try {
         var grQuery = new GlideRecord(tableName);
-        grQuery.get(sysId);
-        //grQuery.addEncodedQuery(query);
-        //grQuery(sysId);
-        output = grQuery.sys_id;
-        gs.print(output);
+        grQuery.query('sys_id', sysId);
+        grQuery.query();
+        if (grQuery.next()) {
+            output = grQuery.sys_id + '';
+        }
     } catch (err) {
         output = 'no access to table ' + err;
     }
