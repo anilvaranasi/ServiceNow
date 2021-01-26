@@ -3,7 +3,6 @@
 //This script should be run as admin user in global scope
 //Script gives output as table name and sysId
 runQueryonTables();
-
 function runQueryonTables() {
 	var sLog = '';
     var outputJson = {};
