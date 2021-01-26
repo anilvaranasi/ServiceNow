@@ -1,5 +1,6 @@
 //Find table based on SysId
 //Developed by Srinivas Anil Kumar Varanasi
+//This script should be run as admin user in global scope
 runQueryonTables();
 
 function runQueryonTables() {
