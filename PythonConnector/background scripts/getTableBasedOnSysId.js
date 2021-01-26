@@ -1,33 +1,45 @@
 //Find table based on SysId
+runQueryonTables();
+
 function runQueryonTables() {
-var outputJson = {};
+	var sLog = '';
+    var outputJson = {};
     var tableList = [];
-var outputList = [];
-var query = 'sys_id=2f738cab0f3600105bc5e7b1d4767e3b';
-var grTable = new GlideRecord('sys_db_object');
-grTable.query();
-while(grTable.next()) {
-    tableList.push(grTable.name);
+    var outputList = [];
+    var sysId = '2f738cab0f3600105bc5e7b1d4767e3b';
+    var query = 'sys_id=2f738cab0f3600105bc5e7b1d4767e3b';
+    var grTable = new GlideRecord('sys_db_object');
+    grTable.query();
+    while (grTable.next()) {
+          tableList.push(grTable.name + '');
+    }
+    for (var m = 0; m < tableList.length; m++) {
+        outputJson = runQuery(tableList[m], sysId);
+        outputList.push(outputJson);
+    }
+    for (var k = 0; k < outputList.length; k++) {
+		sLog += outputList[k].tableName + "=" + outputList[k].output + "\n";
+        //gs.print(outputList[k].tableName + "=" + outputList[k].output);
+    }
+	gs.print(sLog);
 }
 
-for(var  m=0; m<tableList.length; m++) {
-    outputJson = runQuery(tableList[m], query);
-    outputList.push(outputJson)
-}
-for(var k=0; k<outputList.length; k++) {
-    gs.info(outputList[k].tableName + "=" + outputList[k].output);
-}
-}
-
-function runQuery(tableName, query) {
+function runQuery(tableName, sysId) {
     var output = '';
     var outputJson = {};
-    var grQuery = new GlideRecord(tableName);
-    grQuery.addEncodedQuery(query);
-    grQuery();
-    if(grQuery.next()) {
+    try {
+        var grQuery = new GlideRecord(tableName);
+        grQuery.get(sysId);
+        //grQuery.addEncodedQuery(query);
+        //grQuery(sysId);
         output = grQuery.sys_id;
+        gs.print(output);
+    } catch (err) {
+        output = 'no access to table ' + err;
     }
-    outputJson = {"TableName" : tableName, "output" : output};
-    return(outputJson);
+    outputJson = {
+        "tableName": tableName,
+        "output": output
+    };
+    return (outputJson);
 }
